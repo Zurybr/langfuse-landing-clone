@@ -2,19 +2,59 @@
 (function () {
   'use strict';
 
-  /* ── Theme ─────────────────────────────────────────── */
+  /* ── Themes ────────────────────────────────────────── */
+  var THEMES = [
+    { id: 'light',  mode: 'light', label: 'Claro' },
+    { id: 'dark',   mode: 'dark',  label: 'Oscuro' },
+    { id: 'green',  mode: 'light', label: 'Verde' },
+    { id: 'blue',   mode: 'light', label: 'Azul' },
+    { id: 'purple', mode: 'light', label: 'Morado' }
+  ];
+
   var root = document.documentElement;
   var stored = null;
   try { stored = localStorage.getItem('lf-theme'); } catch (e) {}
+
+  function themeById(id) {
+    for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i];
+    return null;
+  }
+
+  function currentTheme() {
+    return themeById(root.getAttribute('data-theme'));
+  }
+
+  function applyTheme(theme, persist) {
+    root.setAttribute('data-theme', theme.id);
+    root.setAttribute('data-mode', theme.mode);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', getComputedStyle(document.body).backgroundColor);
+    if (persist) { try { localStorage.setItem('lf-theme', theme.id); } catch (e) {} }
+    syncToggle();
+  }
+
   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  root.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+  applyTheme(
+    currentTheme() ||
+    themeById(stored) ||
+    (prefersDark ? THEMES[1] : THEMES[0]),
+    false
+  );
 
   var toggle = document.getElementById('themeToggle');
+  function syncToggle() {
+    if (!toggle) return;
+    var theme = currentTheme() || THEMES[0];
+    var next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    toggle.setAttribute('aria-label', 'Tema: ' + theme.label + ' — cambiar a ' + next.label);
+    toggle.setAttribute('title', theme.label);
+    toggle.setAttribute('data-theme-name', theme.id);
+  }
+
   if (toggle) {
     toggle.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('lf-theme', next); } catch (e) {}
+      var i = THEMES.indexOf(currentTheme());
+      applyTheme(THEMES[(i + 1) % THEMES.length], true);
     });
   }
 
