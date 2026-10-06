@@ -343,6 +343,146 @@
   </div>
 </section>
 
+<!-- ── Enterprise scale & security ───────────────────── -->
+<section class="section" id="enterprise">
+  <div class="wrap">
+    <h2 class="section__title">Enterprise scale<br>and <span class="hl">security.</span></h2>
+    <p class="section__lead">Run Langfuse in your VPC or on Langfuse Cloud. SOC 2 Type II, GDPR, ISO 27001 and HIPAA-ready regions, backed by the ClickHouse OLAP core.</p>
+
+    <div class="ent-grid">
+      <article class="ent-cell corner-box corner-box--hover">
+        <h3>Architecture</h3>
+        <ul class="ent-list">
+          <li><a href="#">ClickHouse OLAP database</a></li>
+          <li><a href="#">Async ingestion via Redis queue</a></li>
+          <li><a href="#">S3/Blob storage for large payloads</a></li>
+          <li><a href="#">Edge-cached prompts</a></li>
+        </ul>
+      </article>
+
+      <article class="ent-cell corner-box corner-box--hover">
+        <h3>Security &amp; compliance</h3>
+        <ul class="ent-list">
+          <li><a href="#">SOC 2 Type II &amp; ISO 27001</a></li>
+          <li><a href="#">EU &amp; US data regions</a></li>
+          <li><a href="#">HIPAA-ready region</a></li>
+          <li><a href="#">Hardening for Gov (soon)</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+
+        <!-- Diagrama isométrico: matriz [[1,0.5],[-1,0.5]] proyectada a mano -->
+        <svg class="iso" viewBox="-170 -20 340 210" role="img" aria-label="Bloque isométrico con certificaciones: SOC 2 Type II, ISO 27001, GDPR compliant, HIPAA eligible">
+          <!-- caras laterales (grosor) -->
+          <polygon class="iso__side-l" points="-120,60 0,120 0,132 -120,72"/>
+          <polygon class="iso__side-r" points="0,120 120,60 120,72 0,132"/>
+          <!-- cara superior rómbo -->
+          <polygon class="iso__top" points="0,0 120,60 0,120 -120,60"/>
+          <!-- divisiones internas -->
+          <line class="iso__cell" x1="60" y1="30" x2="0" y2="60"/>
+          <line class="iso__cell" x1="-60" y1="30" x2="60" y2="90"/>
+          <!-- aristas -->
+          <polygon class="iso__edge" points="0,0 120,60 0,120 -120,60"/>
+          <line class="iso__edge" x1="-120" y1="60" x2="-120" y2="72"/>
+          <line class="iso__edge" x1="120" y1="60" x2="120" y2="72"/>
+          <line class="iso__edge" x1="0" y1="120" x2="0" y2="132"/>
+          <!-- lineas de proyeccion -->
+          <line class="iso__leader" x1="-120" y1="72" x2="-152" y2="150"/>
+          <line class="iso__leader" x1="0" y1="132" x2="0" y2="186"/>
+          <line class="iso__leader" x1="120" y1="72" x2="152" y2="150"/>
+          <!-- etiquetas -->
+          <text class="iso__label" x="-52" y="22">SOC 2</text>
+          <text class="iso__label" x="-52" y="36">TYPE II</text>
+          <text class="iso__label iso__label--two" x="66" y="42">ISO</text>
+          <text class="iso__label iso__label--two" x="66" y="54">27001</text>
+          <text class="iso__label iso__label--two" x="-108" y="82">GDPR</text>
+          <text class="iso__label iso__label--two" x="-108" y="94">compliant</text>
+          <text class="iso__label iso__label--two" x="-14" y="112">HIPAA</text>
+          <text class="iso__label iso__label--two" x="-14" y="124">eligible</text>
+          <!-- puntos de estado -->
+          <g class="iso__dot">
+            <circle cx="46" cy="24" r="2"/><circle cx="54" cy="28" r="2"/>
+            <circle cx="106" cy="54" r="2"/><circle cx="114" cy="58" r="2"/>
+            <circle cx="-14" cy="84" r="2"/><circle cx="-6" cy="88" r="2"/>
+            <circle cx="46" cy="114" r="2"/><circle cx="54" cy="118" r="2"/>
+          </g>
+        </svg>
+      </article>
+
+      <article class="ent-cell corner-box corner-box--hover">
+        <h3>Reliability at scale</h3>
+        <ul class="ent-list">
+          <li><a href="#">65M+ SDK installs/month</a></li>
+          <li><a href="#">90B+ observations processed per month</a></li>
+          <li><a href="#">50,000+ companies using Langfuse</a></li>
+          <li><a href="#">99.9% uptime</a></li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="cust-strip corner-box corner-box--hover">
+      <div class="cust-tiles" aria-hidden="true">
+        <span class="cust-tile">C</span>
+        <span class="cust-tile">◈</span>
+        <span class="cust-tile is-active">◐</span>
+      </div>
+      <div class="cust-body">
+        <h4>SumUp <span aria-hidden="true">↗</span></h4>
+        <p>SumUp runs AI-powered support for 4 million merchants across 35+ markets on Langfuse.</p>
+      </div>
+      <a class="btn btn--primary" href="#">Start free</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Latest / changelog ─────────────────────────────── -->
+<section class="section section--alt" id="latest">
+  <div class="wrap">
+    <h2 class="section__title">Latest from <span class="hl">Langfuse.</span></h2>
+
+    <div class="latest">
+      <div class="latest__main corner-box">
+        <div class="latest__grid">
+          <div>
+            <h3>Langfuse September Update</h3>
+            <p class="latest__meta">7 days ago</p>
+          </div>
+          <div>
+            <h3>Catching conversation signals in Langfuse</h3>
+            <p class="latest__meta">14 days ago</p>
+          </div>
+        </div>
+        <ul class="posts">
+          <li><a href="#">Using TypeSafe's Jev for evals<time>3 weeks ago</time></a></li>
+          <li><a href="#">Self-hosting: ClickHouse tuning guide<time>4 weeks ago</time></a></li>
+          <li><a href="#">Tracing multi-agent systems with OTel<time>5 weeks ago</time></a></li>
+          <li><a href="#">Prompt versioning best practices<time>2 months ago</time></a></li>
+        </ul>
+      </div>
+
+      <aside class="latest__side">
+        <div class="side-box corner-box">
+          <div class="side-box__head">
+            <h3>Changelog</h3>
+            <a href="#">View All</a>
+          </div>
+          <a class="side-post" href="#">See which projects drive your usage<time>today</time></a>
+          <a class="side-post" href="#">Jev as a judge<time>2 weeks ago</time></a>
+          <a class="side-post hatch is-featured" href="#">Run evaluators on historical observations<time>4 weeks ago</time></a>
+        </div>
+
+        <div class="side-box corner-box">
+          <div class="side-box__head"><h3>Self Hosting Guides</h3></div>
+          <ul class="guides">
+            <li><a href="#">Docker Compose</a></li>
+            <li><a href="#">Kubernetes (Helm)</a></li>
+            <li><a href="#">Terraform (AWS, GCP, Azure)</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
 <!-- ── CTA ───────────────────────────────────────────── -->
 <section class="cta">
   <div class="wrap cta__inner">
