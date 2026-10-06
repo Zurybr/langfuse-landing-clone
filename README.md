@@ -16,8 +16,26 @@ python -m http.server 8080
 | Archivo | Descripción |
 |---|---|
 | `index.html` | Estructura de la página: banner, header con mega-menús, hero, loop de trabajo, grid de herramientas, stacks soportados, open source, "Why Langfuse", CTA, FAQ y footer |
-| `styles.css` | Design tokens reales extraídos del CSS de langfuse.com + tema claro/oscuro y responsive |
+| `styles.css` | Design tokens reales extraídos del CSS de langfuse.com + 5 temas (claro, oscuro, verde, azul, morado) y responsive |
 | `app.js` | Toggle de tema, header sticky, mega-menús, menú móvil, contadores animados, FAQ acordeón, reveal on scroll |
+
+## Temas
+
+Cinco temas disponibles, seleccionables con el botón del header (cicla en orden
+claro → oscuro → verde → azul → morado; el punto de color muestra el tema activo):
+
+| Tema | `data-theme` | Apariencia | Acento |
+|---|---|---|---|
+| Claro | `light` | light | lima (`--surface-cta-primary`) |
+| Oscuro | `dark` | dark | oliva |
+| Verde | `green` | light | menta |
+| Azul | `blue` | light | cielo |
+| Morado | `purple` | light | lavanda |
+
+Cada tema redefine solo tokens de color (superficies, líneas, textos, acento) sobre
+el mismo layout. Los estilos que dependen de la variante clara/oscura usan `data-mode`,
+no `data-theme`, para que los temas de color hereden correctamente el render oscuro.
+El tema elegido se guarda en `localStorage` (`lf-theme`).
 
 ## Notas
 
