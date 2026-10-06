@@ -2,11 +2,14 @@
 (function () {
   'use strict';
 
-  /* ── Themes ───────────────────────────────────────── */
+/* ── Themes ───────────────────────────────────────── */
   var THEMES = [
-    { id: 'light', mode: 'light', label: 'Claro' },
-    { id: 'dark',  mode: 'dark',  label: 'Oscuro' },
-    { id: 'rosa',  mode: 'light', label: 'Rosa' }
+    { id: 'light',  mode: 'light', label: 'Claro' },
+    { id: 'dark',   mode: 'dark',  label: 'Oscuro' },
+    { id: 'rosa',   mode: 'light', label: 'Rosa' },
+    { id: 'green',  mode: 'light', label: 'Verde' },
+    { id: 'blue',   mode: 'light', label: 'Azul' },
+    { id: 'purple', mode: 'light', label: 'Morado' }
   ];
 
   var root = document.documentElement;
@@ -32,8 +35,14 @@
   }
 
   var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  // El atributo del HTML es solo el valor por defecto: la preferencia guardada gana.
-  applyTheme(themeById(stored) || (prefersDark ? THEMES[1] : THEMES[0]), false);
+// La preferencia guardada gana; el atributo data-theme del HTML y la
+  // preferencia del sistema son solo el valor por defecto inicial.
+  applyTheme(
+    themeById(stored) ||
+    currentTheme() ||
+    (prefersDark ? THEMES[1] : THEMES[0]),
+    false
+  );
 
   var toggle = document.getElementById('themeToggle');
   function syncToggle() {
@@ -42,6 +51,7 @@
     var next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
     toggle.setAttribute('aria-label', 'Tema: ' + theme.label + ' — cambiar a ' + next.label);
     toggle.setAttribute('title', theme.label);
+toggle.setAttribute('data-theme-name', theme.id);
   }
 
   if (toggle) {
