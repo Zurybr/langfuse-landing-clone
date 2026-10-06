@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Langfuse: Open Source Agent Evals &amp; Observability</title>
+<meta name="description" content="Trace, evaluate, and improve AI agents with one open platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ── Announcement bar ─────────────────────────────── -->
+<div class="announce">
+  <p><strong>Langfuse v4</strong>: up to 165× faster · <a href="#">Read more</a></p>
+  <button class="announce__close" aria-label="Dismiss">×</button>
+</div>
+
+<!-- ── Header ────────────────────────────────────────── -->
+<header class="header" id="header">
+  <div class="header__inner">
+    <a class="brand" href="#" aria-label="Langfuse home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M9 22V10l14 12V10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand__name">langfuse</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <div class="nav__item">
+        <button class="nav__link" aria-expanded="false">Product
+          <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <div class="mega" hidden>
+          <div class="mega__col">
+            <a class="mega__link" href="#">
+              <span class="mega__icon">◎</span>
+              <span><strong>Overview</strong><em>Everything in one platform</em></span>
+            </a>
+            <a class="mega__link" href="#">
+              <span class="mega__icon">⌁</span>
+              <span><strong>LLM Observability</strong><em>Traces, costs, latency</em></span>
+            </a>
+            <a class="mega__link" href="#">
+              <span class="mega__icon">✦</span>
+              <span><strong>Prompt Management</strong><em>Versioning &amp; rollouts</em></span>
+            </a>
+            <a class="mega__link" href="#">
+              <span class="mega__icon">✓</span>
+              <span><strong>Evaluation</strong><em>LLM-as-a-judge &amp; human</em></span>
+            </a>
+            <a class="mega__link" href="#">
+              <span class="mega__icon">▤</span>
+              <span><strong>Metrics</strong><em>Quality dashboards</em></span>
+            </a>
+          </div>
+          <div class="mega__col mega__col--aside">
+            <p class="eyebrow">Featured</p>
+            <p class="mega__title">Get Started with Tracing</p>
+            <p class="mega__desc">Step-by-step guide to ingesting your first trace using OpenAI, LangChain, or the SDKs.</p>
+            <a class="link-arrow" href="#">Read docs →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav__item">
+        <button class="nav__link" aria-expanded="false">Resources
+          <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <div class="mega" hidden>
+          <div class="mega__col">
+            <a class="mega__link" href="#"><span class="mega__icon">◇</span><span><strong>Academy</strong><em>Learn the full loop</em></span></a>
+            <a class="mega__link" href="#"><span class="mega__icon">⌬</span><span><strong>Workshop</strong><em>Hands-on sessions</em></span></a>
+            <a class="mega__link" href="#"><span class="mega__icon">✎</span><span><strong>Blog</strong></span></a>
+            <a class="mega__link" href="#"><span class="mega__icon">↺</span><span><strong>Changelog</strong></span></a>
+            <a class="mega__link" href="#"><span class="mega__icon">◷</span><span><strong>Roadmap</strong></span></a>
+          </div>
+          <div class="mega__col mega__col--aside">
+            <p class="eyebrow">News</p>
+            <p class="mega__title">Langfuse joins ClickHouse</p>
+            <p class="mega__desc">Our goal continues to be building the best AI engineering platform.</p>
+            <a class="link-arrow" href="#">Read story →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav__item"><a class="nav__link" href="#">Use cases</a></div>
+      <div class="nav__item"><a class="nav__link" href="#">Customers</a></div>
+      <div class="nav__item"><a class="nav__link" href="#">Docs</a></div>
+      <div class="nav__item"><a class="nav__link" href="#">Changelog</a></div>
+      <div class="nav__item"><a class="nav__link" href="#">Pricing</a></div>
+    </nav>
+
+    <div class="header__actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg viewBox="0 0 20 20" aria-hidden="true" class="ico-sun"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M16 4l-1.4 1.4M5.4 14.6 4 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 20 20" aria-hidden="true" class="ico-moon"><path d="M16 12.4A7 7 0 0 1 7.6 4a7 7 0 1 0 8.4 8.4Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+      <a class="btn btn--primary" href="#">Launch App</a>
+      <a class="btn btn--ghost" href="#">Get Demo</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+
+  <div class="mobile" id="mobile" hidden>
+    <a href="#">Product</a><a href="#">Resources</a><a href="#">Use cases</a>
+    <a href="#">Customers</a><a href="#">Docs</a><a href="#">Pricing</a>
+    <a class="btn btn--primary" href="#">Launch App</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ── Hero ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap hero__inner">
+    <p class="eyebrow eyebrow--center">Open Source</p>
+    <h1 class="hero__title">
+      Agent Evals &amp;<br>
+      <span class="hl">Observability</span>
+    </h1>
+    <p class="hero__lead">
+      Trace, evaluate, and improve AI agents with one open platform. Use production data to understand
+      behavior, collaborate on fixes, and ship better quality at lower cost and latency.
+    </p>
+    <div class="hero__cta">
+      <a class="btn btn--primary btn--lg" href="#">Start free</a>
+      <a class="btn btn--outline btn--lg" href="#">Documentation</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="stat__num" data-count="21">21</span><span class="stat__label">of Fortune 50</span></div>
+      <div class="stat"><span class="stat__num" data-count="90" data-suffix="B+">90B+</span><span class="stat__label">observations / month</span></div>
+      <div class="stat"><span class="stat__num" data-count="100000" data-format="k" data-suffix="+">100,000+</span><span class="stat__label">engineers building on Langfuse</span></div>
+    </div>
+
+    <!-- Abstract trace visual -->
+    <div class="hero__visual" aria-hidden="true">
+      <div class="trace">
+        <div class="trace__row trace__row--root">
+          <span class="badge badge--span">span</span>
+          <span class="trace__name">chat-completion</span>
+          <span class="trace__meta">1.82s</span>
+          <span class="trace__cost">$0.0041</span>
+        </div>
+        <div class="trace__row trace__row--child">
+          <span class="badge">generation</span>
+          <span class="trace__name">gpt-4.1 · system+user</span>
+          <span class="trace__meta">1.64s</span>
+          <span class="trace__cost">$0.0038</span>
+        </div>
+        <div class="trace__row trace__row--child">
+          <span class="badge">tool</span>
+          <span class="trace__name">retrieve_documents</span>
+          <span class="trace__meta">142ms</span>
+          <span class="trace__cost">—</span>
+        </div>
+        <div class="trace__row trace__row--child">
+          <span class="badge badge--eval">eval</span>
+          <span class="trace__name">helpfulness · llm-as-judge</span>
+          <span class="score">0.92</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Loop ──────────────────────────────────────────── -->
+<section class="section" id="loop">
+  <div class="wrap">
+    <h2 class="section__title">Launch, observe,<br>improve <span class="muted">— repeat.</span></h2>
+    <p class="section__lead">
+      Langfuse connects tracing, monitoring, datasets, experiments, and evaluation in one continuous loop.
+      Use production signals to understand behavior, test improvements, and ship better agents with confidence.
+    </p>
+
+    <div class="loop-grid">
+      <article class="card card--loop">
+        <span class="card__step">01</span>
+        <h3>Observe</h3>
+        <p>Hierarchical traces capture every LLM call, tool invocation, and retrieval step. Filter by user, session, cost, latency, or custom metadata.</p>
+      </article>
+      <article class="card card--loop">
+        <span class="card__step">02</span>
+        <h3>Evaluate</h3>
+        <p>LLM-as-a-judge, heuristic functions, or human review. Run evaluators on production data or during experiments.</p>
+      </article>
+      <article class="card card--loop">
+        <span class="card__step">03</span>
+        <h3>Improve</h3>
+        <p>Turn improving your production prompts a team sport — one-click deployments and rollbacks, reviewed by your whole team.</p>
+      </article>
+      <article class="card card--loop">
+        <span class="card__step">04</span>
+        <h3>Repeat</h3>
+        <p>Ship with confidence. Cost and latency stay lower while quality climbs, and every change is versioned.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Tools ─────────────────────────────────────────── -->
+<section class="section section--alt" id="tools">
+  <div class="wrap">
+    <h2 class="section__title">All the tools,<br>one <span class="hl">integrated platform.</span></h2>
+    <p class="section__lead">One integrated platform to trace, manage prompts, evaluate, and experiment from prototype to production scale.</p>
+
+    <div class="tools-grid">
+      <article class="tool">
+        <div class="tool__icon">◎</div>
+        <h3>Observability</h3>
+        <p>Hierarchical traces capture every LLM call, tool invocation, and retrieval step. Filter by user, session, cost, latency, or custom metadata.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">✓</div>
+        <h3>Evaluation</h3>
+        <p>LLM-as-a-judge, heuristic functions, or human review. Run evaluators on production data or during experiments.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">✦</div>
+        <h3>Prompt Management</h3>
+        <p>Separate prompts from code with one-click deployments and rollbacks. Turn improving your production prompts a team sport.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">▷</div>
+        <h3>Playground</h3>
+        <p>Test prompts on real production inputs and compare models side-by-side.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">⚗</div>
+        <h3>Experiments</h3>
+        <p>Define test cases and run experiments. Compare results side by side.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">☺</div>
+        <h3>Human Annotation</h3>
+        <p>Collaborative Human-in-the-Loop workflows to review traces and create golden datasets.</p>
+      </article>
+      <article class="tool">
+        <div class="tool__icon">◔</div>
+        <h3>Cost &amp; Latency</h3>
+        <p>Monitor cost, latency, and quality with dashboards and automated alerts.</p>
+      </article>
+      <article class="tool tool--cta">
+        <p>Ready to try it on your own traces?</p>
+        <a class="btn btn--primary" href="#">Start free</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stack ─────────────────────────────────────────── -->
+<section class="section" id="stack">
+  <div class="wrap">
+    <h2 class="section__title">Works with <span class="hl">any stack.</span></h2>
+    <p class="section__lead">Langfuse works with any language and framework supporting OTel instrumentation. Additionally, 100+ integrations make getting started even easier. No framework lock-in.</p>
+
+    <div class="stack">
+      <div class="stack__col">
+        <p class="eyebrow">Languages (via OTel)</p>
+        <ul class="stack__list">
+          <li>Python <em>(Native SDK)</em></li>
+          <li>TypeScript <em>(Native SDK)</em></li>
+          <li>Go</li><li>Java</li><li>.NET</li>
+          <li>Ruby</li><li>PHP</li><li>Swift</li>
+        </ul>
+      </div>
+      <div class="stack__col">
+        <p class="eyebrow">Agent frameworks</p>
+        <ul class="stack__list">
+          <li>LangChain</li><li>Vercel AI SDK</li><li>LiteLLM</li>
+          <li>Pydantic AI</li><li>Google ADK</li><li>CrewAI</li>
+          <li>LiveKit</li><li class="muted">and many more…</li>
+        </ul>
+      </div>
+      <div class="stack__col">
+        <p class="eyebrow">Model providers</p>
+        <ul class="stack__list">
+          <li>OpenAI</li><li>Anthropic</li><li>Amazon Bedrock</li>
+          <li>Azure OpenAI</li><li>Mistral AI</li><li>Google Gemini</li>
+          <li>xAI</li><li>vLLM</li><li>Groq</li>
+          <li class="muted">and many more…</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="eyebrow stack__more-eyebrow">100+ more integrations</p>
+    <div class="chips">
+      <span class="chip">Claude Code</span><span class="chip">LiteLLM (Proxy/Gateway)</span>
+      <span class="chip">OpenClaw</span><span class="chip">Claude Agent SDK (Python)</span>
+      <span class="chip">LangChain DeepAgents</span><span class="chip">OpenWebUI</span>
+      <span class="chip">Ollama</span><span class="chip">OpenAI Agents SDK</span>
+      <span class="chip">Dify</span><span class="chip">Langflow</span>
+      <span class="chip">OpenRouter</span><span class="chip">n8n</span>
+      <span class="chip">Spring AI</span><span class="chip">Cursor</span>
+      <span class="chip">PostHog</span><span class="chip">+85 more</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Open source ───────────────────────────────────── -->
+<section class="section section--dark">
+  <div class="wrap split">
+    <div>
+      <h2 class="section__title">Open platform.<br><span class="hl">Open source.</span></h2>
+      <p class="section__lead">MIT licensed, self-hostable, and built on OpenTelemetry. Keep your data in your infrastructure — no vendor lock-in, ever.</p>
+      <div class="split__actions">
+        <a class="btn btn--primary" href="#">Star on GitHub</a>
+        <a class="btn btn--outline" href="#">Read the docs</a>
+      </div>
+    </div>
+    <div class="os-grid">
+      <div class="os-cell"><strong>MIT</strong><span>License</span></div>
+      <div class="os-cell"><strong>35.4k</strong><span>GitHub stars</span></div>
+      <div class="os-cell"><strong>1.9k</strong><span>Community Q&amp;A threads</span></div>
+      <div class="os-cell"><strong>1.7k</strong><span>Roadmap threads</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why ───────────────────────────────────────────── -->
+<section class="section" id="why">
+  <div class="wrap split split--why">
+    <div class="split__sticky">
+      <h2 class="section__title">Why use <span class="hl">Langfuse?</span></h2>
+      <p class="section__lead">Everything an AI engineering team needs — and nothing you have to work around.</p>
+    </div>
+    <ul class="reasons">
+      <li><h3>The full cycle</h3><p>Tracing, prompts, evals, experiments and human feedback in one continuous loop, not five disconnected tools.</p></li>
+      <li><h3>Unified platform</h3><p>One UI, one data model, one bill. Compare a prompt change, a model swap and a tool fix side by side.</p></li>
+      <li><h3>Open source (MIT)</h3><p>Audit the code, fork it, self-host it. Your traces stay yours.</p></li>
+      <li><h3>OTel native</h3><p>Standard instrumentation means no proprietary SDK lock-in and instant compatibility with the rest of your stack.</p></li>
+      <li><h3>100+ integrations</h3><p>Frameworks, model providers, vector stores, gateways — wired up out of the box.</p></li>
+      <li><h3>Built for scale</h3><p>ClickHouse-backed ingestion handling billions of observations per month with real-time dashboards.</p></li>
+      <li><h3>Async by default</h3><p>Batch ingestion and background evaluation keep latency out of your critical path.</p></li>
+      <li><h3>Production-proven</h3><p>21 of the Fortune 50 run Langfuse in production today.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────── -->
+<section class="cta">
+  <div class="wrap cta__inner">
+    <h2 class="cta__title">Start improving<br>your agents<br><span class="muted">in under 5 minutes.</span></h2>
+    <div class="cta__actions">
+      <a class="btn btn--primary btn--lg" href="#">Start free</a>
+      <a class="btn btn--outline btn--lg" href="#">Book a demo</a>
+    </div>
+    <p class="cta__note">No credit card required · Free tier included · Self-host with Docker Compose, Helm or Terraform</p>
+  </div>
+</section>
+
+<!-- ── FAQ ───────────────────────────────────────────── -->
+<section class="section" id="faq">
+  <div class="wrap wrap--narrow">
+    <h2 class="section__title">Questions &amp; Answers</h2>
+    <div class="faq" id="faqList">
+      <details class="faq__item" open>
+        <summary>What is Langfuse?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Langfuse is an open source platform for tracing, evaluating and prompting LLM applications. It captures hierarchical traces of every model call, tool call and retrieval, then lets teams score them with LLM-as-a-judge or human reviewers.</p>
+      </details>
+      <details class="faq__item">
+        <summary>What does Langfuse help me with?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Debugging failures, comparing prompt or model changes, controlling cost and latency, and building golden datasets from real production traffic.</p>
+      </details>
+      <details class="faq__item">
+        <summary>How does Langfuse compare to LangSmith, Braintrust, Arize, Galileo, and Datadog?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Langfuse is MIT licensed and self-hostable, uses OpenTelemetry as its foundation, and combines observability, prompt management and evals in one product instead of separate subscriptions.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Can I use just tracing without the other features?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Yes. Tracing works standalone; evaluation, prompts and experiments layer on top when you need them.</p>
+      </details>
+      <details class="faq__item">
+        <summary>What deployment options do exist?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Langfuse Cloud, Docker Compose, Kubernetes via Helm, and Terraform modules for AWS, GCP and Azure.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Is self-hosting actually free?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Yes — self-hosted usage only pays for the infrastructure you run it on. The full feature set is available without a license fee.</p>
+      </details>
+      <details class="faq__item">
+        <summary>What frameworks are supported?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Anything that can emit OpenTelemetry spans, plus 100+ ready-made integrations for LangChain, Vercel AI SDK, LiteLLM, Pydantic AI, CrewAI and more.</p>
+      </details>
+      <details class="faq__item">
+        <summary>What's the latency impact?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Negligible. Ingestion is asynchronous with batching, and evaluation runs in the background — typically adding only a few milliseconds per request.</p>
+      </details>
+      <details class="faq__item">
+        <summary>Is Langfuse secure and compliant?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>SOC 2 Type II, GDPR compliant, SSO/SAML, RBAC, audit logs, encryption in transit and at rest, and self-hosting for full data residency control.</p>
+      </details>
+      <details class="faq__item">
+        <summary>How do I get started?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Install an SDK or OTel exporter, point it at your project key, and send your first trace. Most teams are running in under five minutes.</p>
+      </details>
+      <details class="faq__item">
+        <summary>How does pricing work?<span class="faq__sign" aria-hidden="true"></span></summary>
+        <p>Usage-based pricing per observation, with a generous free tier, volume discounts and annual enterprise agreements.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ── Footer ────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <a class="brand" href="#">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M9 22V10l14 12V10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand__name">langfuse</span>
+      </a>
+      <p class="footer__tag">Open Source Agent Evals &amp; Observability.</p>
+    </div>
+    <nav class="footer__cols" aria-label="Footer">
+      <div><p class="eyebrow">Product</p><a href="#">Overview</a><a href="#">Observability</a><a href="#">Prompt Management</a><a href="#">Evaluation</a><a href="#">Pricing</a></div>
+      <div><p class="eyebrow">Resources</p><a href="#">Docs</a><a href="#">Academy</a><a href="#">Blog</a><a href="#">Changelog</a><a href="#">Roadmap</a></div>
+      <div><p class="eyebrow">Self hosting</p><a href="#">Docker Compose</a><a href="#">Kubernetes (Helm)</a><a href="#">Terraform</a><a href="#">Architecture</a></div>
+      <div><p class="eyebrow">Company</p><a href="#">About</a><a href="#">Careers</a><a href="#">Customers</a><a href="#">Security</a></div>
+    </nav>
+  </div>
+  <div class="wrap footer__bottom">
+    <p>© 2026 Langfuse · MIT licensed</p>
+    <div class="footer__social">
+      <a href="#" aria-label="GitHub">GitHub</a><a href="#" aria-label="Discord">Discord</a>
+      <a href="#" aria-label="X">X</a><a href="#" aria-label="LinkedIn">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
