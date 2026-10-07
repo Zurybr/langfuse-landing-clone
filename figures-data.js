@@ -216,6 +216,14 @@ const HAIRLINE_FIGURES = [
     desc: "A bar chart with seven flat tabs where the bars would stand. The pointer brushes them; each lifts a little and drops back to zero.",
     category: "System & Logic",
     defaultIntensity: 0.65
+  },
+  {
+    id: "notebook",
+    name: "Notebook",
+    intensityEffect: "The cover opens wider and the pen writes with longer ink flourishes.",
+    desc: "A hardback notebook opening its cover under the pointer as a fountain pen writes cursive across the ruled page.",
+    category: "Custom",
+    defaultIntensity: 0.75
   }
 ];
 
