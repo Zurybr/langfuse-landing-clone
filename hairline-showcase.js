@@ -18,7 +18,9 @@
     }
   }
 
-  const FIGURES = window.HAIRLINE_FIGURES || [];
+  function getFigures() {
+    return window.HAIRLINE_FIGURES || [];
+  }
 
   /* ── 1. Mount figures on the Loop cards ──────────────── */
   const cardFigures = [
@@ -47,7 +49,6 @@
   });
 
   /* ── 2. Interactive Showcase Playground ──────────────── */
-  const tabsContainer = document.getElementById('hlTabs');
   const mainStage = document.getElementById('hairlineMainStage');
   const captionEl = document.getElementById('hairlineCaptionText');
   const effectEl = document.getElementById('hlIntensityEffect');
@@ -58,27 +59,9 @@
   const codeSnippet = document.getElementById('hlCodeSnippet');
   const codeTabs = document.querySelectorAll('.hl-code-tab');
   const categoryFilters = document.querySelectorAll('.hl-cat-btn');
+  const tabs = document.querySelectorAll('.hl-tab');
 
-  if (!mainStage || FIGURES.length === 0) return;
-
-  // Render all 27 tabs dynamically if container is present
-  function renderTabs(filterCat = 'all') {
-    if (!tabsContainer) return;
-    tabsContainer.innerHTML = '';
-    FIGURES.forEach((fig) => {
-      if (filterCat !== 'all' && fig.category !== filterCat) return;
-      const btn = document.createElement('button');
-      btn.className = 'hl-tab' + (fig.id === currentFigureKey ? ' is-active' : '');
-      btn.dataset.fig = fig.id;
-      btn.textContent = fig.name;
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.hl-tab').forEach((t) => t.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        mountPlaygroundFigure(fig.id);
-      });
-      tabsContainer.appendChild(btn);
-    });
-  }
+  if (!mainStage) return;
 
   let currentFigureKey = 'riffle';
   let currentInstance = null;
@@ -87,8 +70,8 @@
 
   function updateCodeSnippet() {
     if (!codeSnippet) return;
-    const fig = FIGURES.find((f) => f.id === currentFigureKey);
-    if (!fig) return;
+    const figs = getFigures();
+    const fig = figs.find((f) => f.id === currentFigureKey) || { name: currentFigureKey, id: currentFigureKey };
 
     if (activeCodeLang === 'react') {
       codeSnippet.textContent = `import { ${fig.name} } from "@lucasmarkes/hairline/react";
@@ -120,20 +103,16 @@ const fig = ${fig.id}(container, {
   }
 
   function mountPlaygroundFigure(id) {
-    const fig = FIGURES.find((f) => f.id === id);
-    if (!fig || typeof HL[fig.id] !== 'function') return;
+    if (!HL || typeof HL[id] !== 'function') return;
 
-    currentFigureKey = fig.id;
+    currentFigureKey = id;
+    const figs = getFigures();
+    const fig = figs.find((f) => f.id === id);
 
-    if (figureTitleEl) figureTitleEl.textContent = fig.name;
-    if (figureDescEl) figureDescEl.textContent = fig.desc;
-    if (effectEl) effectEl.textContent = fig.intensityEffect;
-
-    // Use figure's default intensity if input wasn't touched or use current
-    if (intensityInput) {
-      currentIntensity = fig.defaultIntensity || currentIntensity;
-      intensityInput.value = currentIntensity;
-      if (intensityVal) intensityVal.textContent = currentIntensity.toFixed(2);
+    if (fig) {
+      if (figureTitleEl) figureTitleEl.textContent = fig.name;
+      if (figureDescEl) figureDescEl.textContent = fig.desc;
+      if (effectEl) effectEl.textContent = fig.intensityEffect;
     }
 
     if (currentInstance) {
@@ -142,7 +121,7 @@ const fig = ${fig.id}(container, {
     }
     mainStage.innerHTML = '';
 
-    currentInstance = HL[fig.id](mainStage, {
+    currentInstance = HL[id](mainStage, {
       intensity: currentIntensity,
       theme: 'auto',
       onRead: (text) => {
@@ -155,9 +134,15 @@ const fig = ${fig.id}(container, {
     updateCodeSnippet();
   }
 
-  // Initial render of tabs
-  renderTabs('all');
-  mountPlaygroundFigure('riffle');
+  // Hook all 27 tab buttons
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      const figId = tab.dataset.fig;
+      if (figId) mountPlaygroundFigure(figId);
+    });
+  });
 
   // Category filters
   categoryFilters.forEach((btn) => {
@@ -165,7 +150,14 @@ const fig = ${fig.id}(container, {
       categoryFilters.forEach((b) => b.classList.remove('is-active'));
       btn.classList.add('is-active');
       const cat = btn.dataset.cat || 'all';
-      renderTabs(cat);
+
+      tabs.forEach((tab) => {
+        if (cat === 'all' || tab.dataset.cat === cat) {
+          tab.style.display = '';
+        } else {
+          tab.style.display = 'none';
+        }
+      });
     });
   });
 
@@ -215,4 +207,7 @@ const fig = ${fig.id}(container, {
     attributes: true,
     attributeFilter: ['data-theme', 'data-mode']
   });
+
+  // Mount initial figure
+  mountPlaygroundFigure('riffle');
 })();
