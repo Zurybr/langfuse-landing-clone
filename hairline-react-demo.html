@@ -256,7 +256,8 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Hairline global library -->
+  <!-- Hairline global library and data -->
+  <script src="figures-data.js"></script>
   <script src="hairline.global.js"></script>
 </head>
 <body>
@@ -312,23 +313,15 @@
     return <div ref={ref} style={{ width: "100%", height: "100%" }} />;
   }
 
-  const FIGURES = [
-    { id: "terminal", name: "Terminal", desc: "Historial de logs y trazas que se expande bajo el puntero." },
-    { id: "branches", name: "Branches", desc: "Grafo interactivo de ramas de ejecución y commits." },
-    { id: "exploded", name: "Exploded", desc: "Ventana desglosada en capas ortogonales." },
-    { id: "dish", name: "Dish (Radar)", desc: "Antena parabólica en gimbal de 2 ejes siguiendo el cursor." },
-    { id: "terrain", name: "Terrain", desc: "Matriz de 81 pilares con ondas y resortes de elevación." },
-    { id: "patch", name: "Patch", desc: "Panel de cables de conexión que se alzan al pasar el puntero." },
-    { id: "turntable", name: "Turntable", desc: "Plato giratorio con inercia y detención física." },
-    { id: "router", name: "Router", desc: "Antenas de enrutador inclinándose hacia el puntero." }
-  ];
+  const FIGURES = window.HAIRLINE_FIGURES || [];
 
   function App() {
-    const [activeFig, setActiveFig] = useState("terminal");
+    const [activeFig, setActiveFig] = useState("riffle");
     const [intensity, setIntensity] = useState(0.70);
     const [readout, setReadout] = useState("rest");
     const [theme, setTheme] = useState("auto");
     const [isDark, setIsDark] = useState(false);
+    const [category, setCategory] = useState("all");
 
     const toggleTheme = () => {
       const next = !isDark;
@@ -337,6 +330,10 @@
     };
 
     const currentFig = FIGURES.find(f => f.id === activeFig) || FIGURES[0];
+
+    const filteredFigs = category === "all"
+      ? FIGURES
+      : FIGURES.filter(f => f.category === category);
 
     const codeSnippet = `import { ${currentFig.name} } from "@lucasmarkes/hairline/react";
 
@@ -355,21 +352,60 @@ export function AgentVisual() {
       <div className="container">
         <header>
           <div>
-            <span className="badge">@lucasmarkes/hairline · React Integration</span>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
+              <span className="badge">@lucasmarkes/hairline · 27 Figures</span>
+              <a href="index.html" style={{ fontSize: 13, color: "var(--muted)" }}>← Volver a Landing</a>
+              <a href="figures.html" style={{ fontSize: 13, color: "var(--muted)" }}>Catálogo completo →</a>
+            </div>
             <h1>Hairline en React</h1>
             <p className="lead">{currentFig.desc}</p>
+            <div style={{
+              marginTop: 10,
+              padding: "8px 12px",
+              background: "var(--card-bg)",
+              border: "1px dashed var(--border)",
+              borderRadius: 8,
+              fontSize: 13
+            }}>
+              <strong style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                background: "var(--accent-badge, #fbff81)",
+                color: "#1a1a12",
+                padding: "2px 6px",
+                borderRadius: 4,
+                marginRight: 6
+              }}>Mayor intensidad:</strong>
+              {currentFig.intensityEffect}
+            </div>
           </div>
           <button className="theme-btn" onClick={toggleTheme}>
             <span>{isDark ? "☀️ Tema Claro" : "🌙 Tema Oscuro"}</span>
           </button>
         </header>
 
+        <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
+          {["all", "Hardware & UI", "Mechanics", "Physical", "System & Logic"].map(cat => (
+            <button
+              key={cat}
+              className={`tab-btn ${category === cat ? "active" : ""}`}
+              style={{ fontSize: 12, padding: "5px 12px" }}
+              onClick={() => setCategory(cat)}
+            >
+              {cat === "all" ? "Todos (27)" : cat}
+            </button>
+          ))}
+        </div>
+
         <div className="grid-tabs">
-          {FIGURES.map(f => (
+          {filteredFigs.map(f => (
             <button
               key={f.id}
               className={`tab-btn ${activeFig === f.id ? "active" : ""}`}
-              onClick={() => setActiveFig(f.id)}
+              onClick={() => {
+                setActiveFig(f.id);
+                setIntensity(f.defaultIntensity || 0.70);
+              }}
             >
               {f.name}
             </button>

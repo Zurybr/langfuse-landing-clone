@@ -18,6 +18,8 @@
     }
   }
 
+  const FIGURES = window.HAIRLINE_FIGURES || [];
+
   /* ── 1. Mount figures on the Loop cards ──────────────── */
   const cardFigures = [
     { id: 'hl-observe',  fn: HL.terminal,  intensity: 0.65, label: 'Observability Terminal' },
@@ -45,83 +47,55 @@
   });
 
   /* ── 2. Interactive Showcase Playground ──────────────── */
+  const tabsContainer = document.getElementById('hlTabs');
   const mainStage = document.getElementById('hairlineMainStage');
   const captionEl = document.getElementById('hairlineCaptionText');
+  const effectEl = document.getElementById('hlIntensityEffect');
+  const figureTitleEl = document.getElementById('hlFigureTitle');
+  const figureDescEl = document.getElementById('hlFigureDesc');
   const intensityInput = document.getElementById('hlIntensityRange');
   const intensityVal = document.getElementById('hlIntensityVal');
-  const tabs = document.querySelectorAll('.hl-tab');
   const codeSnippet = document.getElementById('hlCodeSnippet');
   const codeTabs = document.querySelectorAll('.hl-code-tab');
+  const categoryFilters = document.querySelectorAll('.hl-cat-btn');
 
-  if (!mainStage) return;
+  if (!mainStage || FIGURES.length === 0) return;
 
-  const FIGURE_DEFS = {
-    terminal: {
-      fn: HL.terminal,
-      name: 'Terminal',
-      desc: 'Ventana de terminal interactiva con historial en filas. El puntero viaja por el historial elevando y destacando las líneas de trazas.',
-      intensity: 0.75
-    },
-    branches: {
-      fn: HL.branches,
-      name: 'Branches',
-      desc: 'Grafo de branching y commits estilo Git: el nodo bajo el puntero se alza con su historial de cambios y se resalta.',
-      intensity: 0.70
-    },
-    exploded: {
-      fn: HL.exploded,
-      name: 'Exploded',
-      desc: 'Arquitectura de aplicación separada en 4 capas isométricas. Moverse horizontalmente expande la separación; verticalmente elige la capa activa.',
-      intensity: 0.80
-    },
-    dish: {
-      fn: HL.dish,
-      name: 'Dish',
-      desc: 'Antena de telemetría parabólica en cardán (gimbal) de dos ejes. Apunta y sigue la posición del puntero con amortiguación elástica.',
-      intensity: 0.70
-    },
-    terrain: {
-      fn: HL.terrain,
-      name: 'Terrain',
-      desc: 'Superficie de 81 pilares en relieve. Reaccionan elevándose en radio circular alrededor del cursor con física spring continua.',
-      intensity: 0.65
-    },
-    patch: {
-      fn: HL.patch,
-      name: 'Patch',
-      desc: 'Patch panel de 24 puertos con cables de conexión. El cable bajo el cursor se eleva y los vecinos se inclinan armónicamente.',
-      intensity: 0.70
-    },
-    router: {
-      fn: HL.router,
-      name: 'Router',
-      desc: 'Enrutador con antenas erguidas que se inclinan proporcionalmente en dirección al cursor.',
-      intensity: 0.75
-    },
-    sieve: {
-      fn: HL.sieve,
-      name: 'Sieve',
-      desc: 'Tres tamices apilados. La altura del puntero selecciona un tamiz, que asciende despejando su rejilla.',
-      intensity: 0.60
-    }
-  };
+  // Render all 27 tabs dynamically if container is present
+  function renderTabs(filterCat = 'all') {
+    if (!tabsContainer) return;
+    tabsContainer.innerHTML = '';
+    FIGURES.forEach((fig) => {
+      if (filterCat !== 'all' && fig.category !== filterCat) return;
+      const btn = document.createElement('button');
+      btn.className = 'hl-tab' + (fig.id === currentFigureKey ? ' is-active' : '');
+      btn.dataset.fig = fig.id;
+      btn.textContent = fig.name;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.hl-tab').forEach((t) => t.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        mountPlaygroundFigure(fig.id);
+      });
+      tabsContainer.appendChild(btn);
+    });
+  }
 
-  let currentFigureKey = 'terminal';
+  let currentFigureKey = 'riffle';
   let currentInstance = null;
-  let currentIntensity = 0.75;
+  let currentIntensity = 0.70;
   let activeCodeLang = 'react';
 
   function updateCodeSnippet() {
     if (!codeSnippet) return;
-    const def = FIGURE_DEFS[currentFigureKey];
-    if (!def) return;
+    const fig = FIGURES.find((f) => f.id === currentFigureKey);
+    if (!fig) return;
 
     if (activeCodeLang === 'react') {
-      codeSnippet.textContent = `import { ${def.name} } from "@lucasmarkes/hairline/react";
+      codeSnippet.textContent = `import { ${fig.name} } from "@lucasmarkes/hairline/react";
 
-export function AgentVisual() {
+export function Visual() {
   return (
-    <${def.name}
+    <${fig.name}
       intensity={${currentIntensity.toFixed(2)}}
       theme="auto"
       onRead={(caption) => console.log(caption)}
@@ -130,26 +104,37 @@ export function AgentVisual() {
   );
 }`;
     } else {
-      codeSnippet.textContent = `import { ${def.name.toLowerCase()} } from "@lucasmarkes/hairline";
+      codeSnippet.textContent = `import { ${fig.id} } from "@lucasmarkes/hairline";
 
 const container = document.getElementById("figure-slot");
-const fig = ${def.name.toLowerCase()}(container, {
+const fig = ${fig.id}(container, {
   intensity: ${currentIntensity.toFixed(2)},
   theme: "auto",
   onRead: (caption) => console.log(caption)
 });
 
-// Para actualizar o desmontar:
+// Update or destroy:
 // fig.update({ intensity: 0.9 });
 // fig.destroy();`;
     }
   }
 
-  function mountPlaygroundFigure(key) {
-    const def = FIGURE_DEFS[key];
-    if (!def || typeof def.fn !== 'function') return;
+  function mountPlaygroundFigure(id) {
+    const fig = FIGURES.find((f) => f.id === id);
+    if (!fig || typeof HL[fig.id] !== 'function') return;
 
-    currentFigureKey = key;
+    currentFigureKey = fig.id;
+
+    if (figureTitleEl) figureTitleEl.textContent = fig.name;
+    if (figureDescEl) figureDescEl.textContent = fig.desc;
+    if (effectEl) effectEl.textContent = fig.intensityEffect;
+
+    // Use figure's default intensity if input wasn't touched or use current
+    if (intensityInput) {
+      currentIntensity = fig.defaultIntensity || currentIntensity;
+      intensityInput.value = currentIntensity;
+      if (intensityVal) intensityVal.textContent = currentIntensity.toFixed(2);
+    }
 
     if (currentInstance) {
       currentInstance.destroy();
@@ -157,12 +142,12 @@ const fig = ${def.name.toLowerCase()}(container, {
     }
     mainStage.innerHTML = '';
 
-    currentInstance = def.fn(mainStage, {
+    currentInstance = HL[fig.id](mainStage, {
       intensity: currentIntensity,
       theme: 'auto',
       onRead: (text) => {
         if (captionEl) {
-          captionEl.textContent = text || def.desc;
+          captionEl.textContent = text || 'rest';
         }
       }
     });
@@ -170,16 +155,17 @@ const fig = ${def.name.toLowerCase()}(container, {
     updateCodeSnippet();
   }
 
-  // Mount default figure
-  mountPlaygroundFigure('terminal');
+  // Initial render of tabs
+  renderTabs('all');
+  mountPlaygroundFigure('riffle');
 
-  // Tab switching
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      tabs.forEach((t) => t.classList.remove('is-active'));
-      tab.classList.add('is-active');
-      const figKey = tab.dataset.fig;
-      if (figKey) mountPlaygroundFigure(figKey);
+  // Category filters
+  categoryFilters.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      categoryFilters.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const cat = btn.dataset.cat || 'all';
+      renderTabs(cat);
     });
   });
 
@@ -192,7 +178,6 @@ const fig = ${def.name.toLowerCase()}(container, {
       if (currentInstance) {
         currentInstance.update({ intensity: val });
       }
-      // Also update cards
       cardInstances.forEach((inst) => inst.update({ intensity: val }));
       updateCodeSnippet();
     });

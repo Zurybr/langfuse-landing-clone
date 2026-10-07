@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hairline · Complete 27 Figures Catalog</title>
+  <meta name="description" content="All 27 isometric vector figures powered by @lucasmarkes/hairline. Interactive line drawings that answer the pointer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f6f3;
+      --card-bg: #ffffff;
+      --text: #222220;
+      --muted: #6b6b66;
+      --border: #e0e0dc;
+      --accent: #222220;
+      --accent-badge: #fbff81;
+      --font-sans: "Inter", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+
+      --hairline-plate: #ffffff;
+      --hairline-hi: #111110;
+      --hairline-edge: #94949a;
+      --hairline-mid: #bdbdc4;
+      --hairline-lo: #dedee4;
+      --hairline-stroke: 0.9;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #141412;
+      --card-bg: #1d1d1a;
+      --text: #ecece8;
+      --muted: #8e8e88;
+      --border: #2c2c28;
+      --accent: #ffffff;
+      --accent-badge: #4c4d23;
+
+      --hairline-plate: #1d1d1a;
+      --hairline-hi: #f5f5f7;
+      --hairline-edge: #5c5c64;
+      --hairline-mid: #3a3a42;
+      --hairline-lo: #26262d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding: 32px 24px 80px;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 40px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    p.lead {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 760px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* Controls toolbar */
+    .toolbar {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: 0 4px 16px -8px rgba(0,0,0,0.06);
+    }
+
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .filter-btn:hover { color: var(--text); border-color: var(--text); }
+    .filter-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+    .slider-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+    }
+    .slider-control label {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .slider-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .slider-val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* Grid of figures */
+    .figures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+    @media (max-width: 480px) {
+      .figures-grid { grid-template-columns: 1fr; }
+    }
+
+    .fig-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      box-shadow: 0 2px 10px -4px rgba(0,0,0,0.04);
+    }
+    .fig-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px -10px rgba(0,0,0,0.1);
+    }
+
+    .fig-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 5 / 4;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fig-stage > div {
+      width: 100%;
+      height: 100%;
+    }
+
+    .fig-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+    }
+
+    .fig-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .fig-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .fig-cat {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.05);
+      color: var(--muted);
+    }
+    html[data-theme="dark"] .fig-cat {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .fig-desc {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .fig-effect {
+      margin-top: auto;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .fig-effect strong {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--accent-badge);
+      color: var(--text);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 4px;
+    }
+
+    .fig-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .fig-readout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .readout-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .copy-btn {
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--text); }
+  </style>
+
+  <script src="figures-data.js"></script>
+  <script src="hairline.global.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html" class="back-link">← Back to Langfuse Landing</a>
+    <div class="top-actions">
+      <a href="hairline-react-demo.html" class="back-link">React Demo →</a>
+      <button class="theme-btn" id="themeToggleBtn">Toggle Theme</button>
+    </div>
+  </div>
+
+  <header>
+    <p class="eyebrow">Hairline Figure Study · Complete Collection</p>
+    <h1>All 27 Isometric Figures</h1>
+    <p class="lead">
+      Every figure takes <code>intensity</code>, from 0 to 1. Built with pure SVG single strokes, rounded solids, and 60fps spring and tween physical models.
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <div class="filters" id="categoryFilters">
+      <button class="filter-btn active" data-cat="all">All (27)</button>
+      <button class="filter-btn" data-cat="Hardware & UI">Hardware &amp; UI (8)</button>
+      <button class="filter-btn" data-cat="Mechanics">Mechanics (11)</button>
+      <button class="filter-btn" data-cat="Physical">Physical (4)</button>
+      <button class="filter-btn" data-cat="System & Logic">System &amp; Logic (4)</button>
+    </div>
+
+    <div class="slider-control">
+      <label for="globalIntensity">Global Intensity:</label>
+      <input type="range" id="globalIntensity" min="0" max="1" step="0.05" value="0.70">
+      <span class="slider-val" id="globalIntensityVal">0.70</span>
+    </div>
+  </div>
+
+  <div class="figures-grid" id="figuresGrid">
+    <!-- Rendered dynamically -->
+  </div>
+</div>
+
+<script>
+  (function () {
+    const HL = window.Hairline;
+    const FIGURES = window.HAIRLINE_FIGURES || [];
+    const grid = document.getElementById('figuresGrid');
+    const intensitySlider = document.getElementById('globalIntensity');
+    const intensityVal = document.getElementById('globalIntensityVal');
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    let currentCat = 'all';
+    let globalIntensity = 0.70;
+    const mountedInstances = {};
+
+    function renderCards() {
+      grid.innerHTML = '';
+      
+      FIGURES.forEach((fig) => {
+        if (currentCat !== 'all' && fig.category !== currentCat) return;
+
+        const card = document.createElement('article');
+        card.className = 'fig-card';
+        card.id = 'card-' + fig.id;
+
+        card.innerHTML = `
+          <div class="fig-stage" id="stage-${fig.id}"></div>
+          <div class="fig-body">
+            <div class="fig-header">
+              <h3 class="fig-title">${fig.name}</h3>
+              <span class="fig-cat">${fig.category}</span>
+            </div>
+            <p class="fig-desc">${fig.desc}</p>
+            <div class="fig-effect">
+              <strong>Higher intensity</strong>${fig.intensityEffect}
+            </div>
+            <div class="fig-footer">
+              <div class="fig-readout">
+                <span class="readout-dot"></span>
+                <span id="readout-${fig.id}">rest</span>
+              </div>
+              <button class="copy-btn" data-id="${fig.name}">JSX</button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        // Mount figure
+        const stage = card.querySelector('#stage-' + fig.id);
+        const readout = card.querySelector('#readout-' + fig.id);
+        if (stage && typeof HL[fig.id] === 'function') {
+          try {
+            const inst = HL[fig.id](stage, {
+              intensity: globalIntensity,
+              theme: 'auto',
+              onRead: (txt) => {
+                if (readout) readout.textContent = txt || 'rest';
+              }
+            });
+            mountedInstances[fig.id] = inst;
+          } catch (e) {
+            console.error('Error mounting ' + fig.id, e);
+          }
+        }
+      });
+
+      // Hook copy buttons
+      document.querySelectorAll('.copy-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const name = btn.dataset.id;
+          const snippet = `<${name} intensity={${globalIntensity.toFixed(2)}} theme="auto" />`;
+          navigator.clipboard.writeText(snippet).then(() => {
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'JSX'; }, 1500);
+          });
+        });
+      });
+    }
+
+    renderCards();
+
+    // Filters
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat;
+        renderCards();
+      });
+    });
+
+    // Intensity slider
+    intensitySlider.addEventListener('input', (e) => {
+      globalIntensity = parseFloat(e.target.value);
+      intensityVal.textContent = globalIntensity.toFixed(2);
+      Object.values(mountedInstances).forEach((inst) => {
+        if (inst && inst.update) inst.update({ intensity: globalIntensity });
+      });
+    });
+
+    // Theme toggle
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      Object.values(mountedInstances).forEach((inst) => {
+        if (inst && inst.update) inst.update({ theme: 'auto' });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
