@@ -17,7 +17,7 @@
 
 <!-- ── Announcement bar ─────────────────────────────── -->
 <div class="announce">
-  <p><strong>Langfuse v4</strong>: up to 165× faster · <a href="#">Read more</a></p>
+  <p><strong>Hairline UI Animations</strong>: twenty-seven isometric line figures that answer the pointer · <a href="#hairline-showcase">Interactive Demo</a> · <a href="hairline-react-demo.html">React Demo</a> · <a href="hairline-trace.html">Custom Trace</a></p>
   <button class="announce__close" aria-label="Dismiss">×</button>
 </div>
 
@@ -183,25 +183,101 @@
 
     <div class="loop-grid">
       <article class="card card--loop">
+        <div class="card__hairline" id="hl-observe"></div>
         <span class="card__step">01</span>
         <h3>Observe</h3>
         <p>Hierarchical traces capture every LLM call, tool invocation, and retrieval step. Filter by user, session, cost, latency, or custom metadata.</p>
       </article>
       <article class="card card--loop">
+        <div class="card__hairline" id="hl-evaluate"></div>
         <span class="card__step">02</span>
         <h3>Evaluate</h3>
         <p>LLM-as-a-judge, heuristic functions, or human review. Run evaluators on production data or during experiments.</p>
       </article>
       <article class="card card--loop">
+        <div class="card__hairline" id="hl-improve"></div>
         <span class="card__step">03</span>
         <h3>Improve</h3>
         <p>Turn improving your production prompts a team sport — one-click deployments and rollbacks, reviewed by your whole team.</p>
       </article>
       <article class="card card--loop">
+        <div class="card__hairline" id="hl-repeat"></div>
         <span class="card__step">04</span>
         <h3>Repeat</h3>
         <p>Ship with confidence. Cost and latency stay lower while quality climbs, and every change is versioned.</p>
       </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Hairline Interactive Showcase ─────────────────── -->
+<section class="section section--alt" id="hairline-showcase">
+  <div class="wrap">
+    <div class="hairline-header">
+      <p class="eyebrow eyebrow--center">Interactive Engine · Powered by @lucasmarkes/hairline</p>
+      <h2 class="section__title">Isometric vector animations<br>that <span class="hl">answer the pointer.</span></h2>
+      <p class="section__lead">
+        Pure SVG drawings built from rounded solids in single strokes. No heavy dependencies, 60fps spring &amp; tween physics, and light/dark theme adaptation. Hover over any figure to interact.
+      </p>
+    </div>
+
+    <div class="hairline-box">
+      <div class="hairline-box__tabs" id="hlTabs">
+        <button class="hl-tab is-active" data-fig="terminal">Terminal</button>
+        <button class="hl-tab" data-fig="branches">Branches</button>
+        <button class="hl-tab" data-fig="exploded">Exploded</button>
+        <button class="hl-tab" data-fig="dish">Dish (Radar)</button>
+        <button class="hl-tab" data-fig="terrain">Terrain</button>
+        <button class="hl-tab" data-fig="patch">Patch</button>
+        <button class="hl-tab" data-fig="router">Router</button>
+        <button class="hl-tab" data-fig="sieve">Sieve</button>
+      </div>
+
+      <div class="hairline-box__body">
+        <div class="hairline-stage-wrap">
+          <div id="hairlineMainStage" class="hairline-stage"></div>
+          <div class="hairline-caption">
+            <span class="hairline-caption__dot"></span>
+            <span id="hairlineCaptionText">A terminal window with its history in rows...</span>
+          </div>
+        </div>
+
+        <div class="hairline-controls">
+          <div class="hl-ctrl-group">
+            <label for="hlIntensityRange">Intensity: <strong id="hlIntensityVal">0.75</strong></label>
+            <input type="range" id="hlIntensityRange" min="0" max="1" step="0.05" value="0.75">
+            <p class="hl-ctrl-hint">Controls how strongly the figure answers the pointer (spring and tween range).</p>
+          </div>
+
+          <div class="hl-ctrl-group">
+            <label>Theme</label>
+            <div class="hl-theme-buttons">
+              <button class="btn is-active" data-theme-val="auto">Auto</button>
+              <button class="btn" data-theme-val="light">Light</button>
+              <button class="btn" data-theme-val="dark">Dark</button>
+            </div>
+          </div>
+
+          <div class="hl-code-box">
+            <div class="hl-code-tabs">
+              <button class="hl-code-tab is-active" data-lang="react">React</button>
+              <button class="hl-code-tab" data-lang="vanilla">Vanilla JS</button>
+            </div>
+            <pre class="hl-code-pre" id="hlCodeSnippet"><code>import { Terminal } from "@lucasmarkes/hairline/react";
+
+export function AgentVisual() {
+  return (
+    &lt;Terminal
+      intensity={0.75}
+      theme="auto"
+      onRead={(caption) =&gt; console.log(caption)}
+      style={{ width: "100%", maxWidth: 440 }}
+    /&gt;
+  );
+}</code></pre>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -580,6 +656,8 @@
   </div>
 </footer>
 
+<script src="hairline.global.js"></script>
+<script type="module" src="hairline-showcase.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

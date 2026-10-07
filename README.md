@@ -37,6 +37,19 @@ el mismo layout. Los estilos que dependen de la variante clara/oscura usan `data
 no `data-theme`, para que los temas de color hereden correctamente el render oscuro.
 El tema elegido se guarda en `localStorage` (`lf-theme`).
 
+## Animaciones isométricas (Hairline)
+
+Se incorporaron figuras vectoriales isométricas que responden interactivamente al puntero mediante la librería `@lucasmarkes/hairline` y la skill oficial `hairline-create`:
+
+- **Loop de trabajo (`#loop`)**: Figuras interactivas montadas en cada tarjeta:
+  - `Observe`: Terminal interactivo de trazas.
+  - `Evaluate`: Sieve (tamiz).
+  - `Improve`: Grafo de ramas y commits (`Branches`).
+  - `Repeat`: Plato giratorio con física inercial (`Turntable`).
+- **Showcase & Playground interactivo (`#hairline-showcase`)**: Galería con 8 figuras (`Terminal`, `Branches`, `Exploded`, `Dish`, `Terrain`, `Patch`, `Router`, `Sieve`), control deslizante de intensidad, selector de temas y visor de código React / Vanilla.
+- **Demo React (`hairline-react-demo.html`)**: Demostración reactiva basada en `@lucasmarkes/hairline/react`.
+- **Figura propia (`hairline-trace.html`)**: Generada y validada con el kernel de Hairline (`trace.js`), representando la jerarquía de spans de ejecución de agentes de IA.
+
 ## Notas
 
 - Los tokens de color y tipografía provienen de las hojas de estilo públicas de langfuse.com.

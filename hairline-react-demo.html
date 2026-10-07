@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hairline + React Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f6f3;
+      --card-bg: #ffffff;
+      --text: #222220;
+      --muted: #6b6b66;
+      --border: #e0e0dc;
+      --accent: #222220;
+      --font-sans: "Inter", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+      
+      /* Hairline palette matching current container */
+      --hairline-plate: #ffffff;
+      --hairline-hi: #111110;
+      --hairline-edge: #94949a;
+      --hairline-mid: #bdbdc4;
+      --hairline-lo: #dedee4;
+      --hairline-stroke: 0.9;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #141412;
+      --card-bg: #1d1d1a;
+      --text: #ecece8;
+      --muted: #8e8e88;
+      --border: #2c2c28;
+      --accent: #ffffff;
+
+      --hairline-plate: #1d1d1a;
+      --hairline-hi: #f5f5f7;
+      --hairline-edge: #5c5c64;
+      --hairline-mid: #3a3a42;
+      --hairline-lo: #26262d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.06);
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    html[data-theme="dark"] .badge {
+      background: rgba(255,255,255,0.08);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    p.lead {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 15px;
+      max-width: 600px;
+    }
+
+    .theme-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text);
+      border-color: var(--text);
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .stage-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 36px;
+      box-shadow: 0 4px 20px -8px rgba(0,0,0,0.08);
+    }
+    @media (max-width: 820px) {
+      .stage-card { grid-template-columns: 1fr; }
+    }
+
+    .figure-container {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      aspect-ratio: 5 / 4;
+      max-width: 520px;
+      margin: 0 auto;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .figure-container > div {
+      width: 100%;
+      height: 100%;
+    }
+
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+    .control-val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .readout-box {
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .readout-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    .code-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      color: var(--text);
+    }
+
+    .doc-link {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .doc-link a {
+      color: var(--text);
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- React 18 + Babel for live standalone React execution -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Hairline global library -->
+  <script src="hairline.global.js"></script>
+</head>
+<body>
+
+<div class="container" id="root">
+  <div style="padding: 40px; text-align: center; color: #888;">Cargando componentes React de Hairline...</div>
+</div>
+
+<script type="text/babel">
+  const { useState, useEffect, useRef } = React;
+  const HL = window.Hairline;
+
+  // React component wrappers that implement the exact Hairline React API:
+  // <Figure intensity={...} theme={...} onRead={...} />
+  function HairlineComponent({ figureName, intensity, theme, onRead }) {
+    const ref = useRef(null);
+    const instanceRef = useRef(null);
+
+    useEffect(() => {
+      if (!ref.current || !HL || !HL[figureName]) return;
+      
+      // Cleanup previous
+      if (instanceRef.current) {
+        instanceRef.current.destroy();
+        instanceRef.current = null;
+      }
+      ref.current.innerHTML = "";
+
+      const fn = HL[figureName];
+      instanceRef.current = fn(ref.current, {
+        intensity,
+        theme,
+        onRead: (txt) => {
+          if (onRead) onRead(txt);
+        }
+      });
+
+      return () => {
+        if (instanceRef.current) {
+          instanceRef.current.destroy();
+          instanceRef.current = null;
+        }
+      };
+    }, [figureName]);
+
+    // Update options dynamically when intensity or theme changes
+    useEffect(() => {
+      if (instanceRef.current) {
+        instanceRef.current.update({ intensity, theme });
+      }
+    }, [intensity, theme]);
+
+    return <div ref={ref} style={{ width: "100%", height: "100%" }} />;
+  }
+
+  const FIGURES = [
+    { id: "terminal", name: "Terminal", desc: "Historial de logs y trazas que se expande bajo el puntero." },
+    { id: "branches", name: "Branches", desc: "Grafo interactivo de ramas de ejecución y commits." },
+    { id: "exploded", name: "Exploded", desc: "Ventana desglosada en capas ortogonales." },
+    { id: "dish", name: "Dish (Radar)", desc: "Antena parabólica en gimbal de 2 ejes siguiendo el cursor." },
+    { id: "terrain", name: "Terrain", desc: "Matriz de 81 pilares con ondas y resortes de elevación." },
+    { id: "patch", name: "Patch", desc: "Panel de cables de conexión que se alzan al pasar el puntero." },
+    { id: "turntable", name: "Turntable", desc: "Plato giratorio con inercia y detención física." },
+    { id: "router", name: "Router", desc: "Antenas de enrutador inclinándose hacia el puntero." }
+  ];
+
+  function App() {
+    const [activeFig, setActiveFig] = useState("terminal");
+    const [intensity, setIntensity] = useState(0.70);
+    const [readout, setReadout] = useState("rest");
+    const [theme, setTheme] = useState("auto");
+    const [isDark, setIsDark] = useState(false);
+
+    const toggleTheme = () => {
+      const next = !isDark;
+      setIsDark(next);
+      document.documentElement.setAttribute("data-theme", next ? "dark" : "light");
+    };
+
+    const currentFig = FIGURES.find(f => f.id === activeFig) || FIGURES[0];
+
+    const codeSnippet = `import { ${currentFig.name} } from "@lucasmarkes/hairline/react";
+
+export function AgentVisual() {
+  return (
+    <${currentFig.name}
+      intensity={${intensity.toFixed(2)}}
+      theme="${theme}"
+      onRead={(caption) => console.log(caption)}
+      style={{ width: "100%", maxWidth: 400 }}
+    />
+  );
+}`;
+
+    return (
+      <div className="container">
+        <header>
+          <div>
+            <span className="badge">@lucasmarkes/hairline · React Integration</span>
+            <h1>Hairline en React</h1>
+            <p className="lead">{currentFig.desc}</p>
+          </div>
+          <button className="theme-btn" onClick={toggleTheme}>
+            <span>{isDark ? "☀️ Tema Claro" : "🌙 Tema Oscuro"}</span>
+          </button>
+        </header>
+
+        <div className="grid-tabs">
+          {FIGURES.map(f => (
+            <button
+              key={f.id}
+              className={`tab-btn ${activeFig === f.id ? "active" : ""}`}
+              onClick={() => setActiveFig(f.id)}
+            >
+              {f.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="stage-card">
+          <div className="figure-container">
+            <HairlineComponent
+              figureName={activeFig}
+              intensity={intensity}
+              theme={theme}
+              onRead={(txt) => setReadout(txt || "rest")}
+            />
+          </div>
+
+          <div className="controls-panel">
+            <div className="control-item">
+              <div className="control-label">
+                <span>Intensidad (fuerza de respuesta)</span>
+                <span className="control-val">{intensity.toFixed(2)}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={intensity}
+                onChange={(e) => setIntensity(parseFloat(e.target.value))}
+              />
+            </div>
+
+            <div className="control-item">
+              <div className="control-label">
+                <span>Estado / Readout en tiempo real</span>
+              </div>
+              <div className="readout-box">
+                <span className="readout-pulse" />
+                <span>{readout}</span>
+              </div>
+            </div>
+
+            <div className="control-item">
+              <div className="code-title">Código JSX de React</div>
+              <pre><code>{codeSnippet}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div className="doc-link">
+          Basado en la documentación oficial de <a href="https://hairline.lucasmarkes.com/docs#react" target="_blank">hairline.lucasmarkes.com/docs#react</a>.
+        </div>
+      </div>
+    );
+  }
+
+  ReactDOM.render(<App />, document.getElementById("root"));
+</script>
+
+</body>
+</html>

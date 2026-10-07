@@ -1,0 +1,27 @@
+{
+  "name": "prueba_pi",
+  "version": "1.0.0",
+  "description": "Réplica estática de la landing de [langfuse.com](https://langfuse.com/), construida con HTML + CSS + JS vanilla (sin dependencias, sin build).",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "hairline:build": "node .agents/skills/hairline-create/build.mjs",
+    "hairline:validate": "node .agents/skills/hairline-create/validate.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zurybr/langfuse-landing-clone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zurybr/langfuse-landing-clone/issues"
+  },
+  "homepage": "https://github.com/Zurybr/langfuse-landing-clone#readme",
+  "dependencies": {
+    "@lucasmarkes/hairline": "^0.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}
