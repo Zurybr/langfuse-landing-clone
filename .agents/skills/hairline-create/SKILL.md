@@ -26,7 +26,7 @@ One figure, one idea. A concept that needs a label to be understood is not a con
 
 1. Read `rules.md`. The ten rules are not advice: a figure that breaks one is not finished.
 2. Read the index at the top of `kernel.js`: the comment under the hash line, down to `var HL`. It lists everything you may call. Do not read the code under it.
-3. Read the example nearer your concept: `examples/terrain.js` for a continuous field, `examples/riffle.js` for discrete items.
+3. Read the example nearer your concept: `examples/terrain.js` for a continuous field, `examples/riffle.js` for discrete items, `examples/notebook.js` for rotational hinges & writing pen, or `examples/trace.js` for isometric hierarchy trays. See `GUIDE.md` for full implementation patterns.
 4. Write the figure as `<name>.js` in the person's working directory, in the shape of the examples: take what you need from `HL`, define `mount({ stage, svg, read }, value)` returning `{ set, destroy }`, and end the file with `hairline({ name, means, rules, range, mount })`.
    - `name`: lowercase, one word or hyphenated.
    - `means`: one sentence, 140 characters at most, saying what the figure shows. It is the line under the stage.
