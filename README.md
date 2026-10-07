@@ -16,26 +16,36 @@ python -m http.server 8080
 | Archivo | Descripción |
 |---|---|
 | `index.html` | Estructura de la página: banner, header con mega-menús, hero, loop de trabajo, grid de herramientas, stacks soportados, open source, "Why Langfuse", CTA, FAQ y footer |
-| `styles.css` | Design tokens reales extraídos del CSS de langfuse.com + 5 temas (claro, oscuro, verde, azul, morado) y responsive |
-| `app.js` | Toggle de tema, header sticky, mega-menús, menú móvil, contadores animados, FAQ acordeón, reveal on scroll |
+| `styles.css` | Design tokens reales extraídos del CSS de langfuse.com + 6 temas (claro, oscuro, rosa, verde, azul, morado) y responsive |
+| `app.js` | Toggle de tema (cicla los 6 temas), header sticky, mega-menús, menú móvil, contadores animados, FAQ acordeón, reveal on scroll |
 
 ## Temas
 
-Cinco temas disponibles, seleccionables con el botón del header (cicla en orden
-claro → oscuro → verde → azul → morado; el punto de color muestra el tema activo):
+Seis temas disponibles, seleccionables con el botón del header (cicla en orden
+claro → oscuro → rosa → verde → azul → morado; el punto de color muestra el tema activo):
 
 | Tema | `data-theme` | Apariencia | Acento |
 |---|---|---|---|
 | Claro | `light` | light | lima (`--surface-cta-primary`) |
 | Oscuro | `dark` | dark | oliva |
+| Rosa | `rosa` | light | rosa |
 | Verde | `green` | light | menta |
 | Azul | `blue` | light | cielo |
 | Morado | `purple` | light | lavanda |
 
+El tema se define con dos atributos en `<html>`:
+
+- `data-theme` — la paleta (`light`, `dark`, `rosa`, `green`, `blue`, `purple`).
+- `data-mode` — solo `light` / `dark`; decide qué reglas de "modo oscuro" aplican, para que un tema de color claro (rosa, verde, azul, morado) pueda reutilizarlas sin arrastrar la paleta oscura.
+
 Cada tema redefine solo tokens de color (superficies, líneas, textos, acento) sobre
-el mismo layout. Los estilos que dependen de la variante clara/oscura usan `data-mode`,
-no `data-theme`, para que los temas de color hereden correctamente el render oscuro.
-El tema elegido se guarda en `localStorage` (`lf-theme`).
+el mismo layout. Un tema nuevo es un bloque `html[data-theme="…"]` que redefine tokens;
+no hace falta tocar el layout. Además de los tokens de superficie/texto, conviene redefinir
+los derivados (`--accent-ink`, `--accent-line`, `--invert-bg`, `--eval-ink`…). Los estilos
+que dependen de la variante clara/oscura usan `data-mode`, no `data-theme`, para que los
+temas de color hereden correctamente el render oscuro.
+El tema elegido se guarda en `localStorage` (`lf-theme`) y tiene prioridad sobre el
+`data-theme` precargado en el HTML, que solo actúa como valor por defecto.
 
 ## Animaciones isométricas (Hairline)
 
